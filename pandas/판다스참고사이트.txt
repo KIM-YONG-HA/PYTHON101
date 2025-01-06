@@ -1,5 +1,7 @@
+[ 문과생도 할 수 있는 ] 파이썬 업무 자동화 일잘러 되기 + 챗GPT
 https://wikidocs.net/252577
 
+금융 데이터 분석을 위한 파이썬 판다스
 https://wikidocs.net/160689
 
 http://bigdata.dongguk.ac.kr/lectures/Python/_book/pandas.html
