@@ -8,3 +8,7 @@ http://bigdata.dongguk.ac.kr/lectures/Python/_book/pandas.html
 
 
 https://wikidocs.net/174651
+
+
+비즈니스 데이터 분석 with Python
+https://wikidocs.net/205257
