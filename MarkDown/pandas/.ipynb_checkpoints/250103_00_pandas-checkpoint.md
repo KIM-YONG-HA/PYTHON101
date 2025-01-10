@@ -1,0 +1,916 @@
+# pandas
+
+판다스 라이브러리는 2차원 데이터(행과 열)를 수집 및 정리에 최적화되어있는 도구 
+
+
+## import 
+
+``` python
+import pandas as pd
+```
+
+## 자료구조 
+
+시리즈와 데이터프레임이라는 구조화된 데이터 형식을 제공한다.
+
+### 시리즈(Series)
+
+1차원 자료구조 
+
+데이터가 순차적으로 나열된 1차원 배열 
+
+index, value로 구성되며 1:1 대응
+
+파이썬 자료구조 중 딕셔너리와 유사
+
+
+<table style="width:100%">
+<tr>
+<th>이름</th>
+<th>성적</th>
+</tr>
+<tr>
+<td>홍길동</td>
+<td>80</td>
+</tr>
+</table>
+
+
+### 데이터프레임(Data Frame)
+
+2차원 자료구조 
+
+
+
+<table style="width:100%">
+<tr>
+<th>이름</th>
+<th>국어</th>
+<th>영어</th>
+<th>수학</th>
+<th>합</th>
+</tr>
+<tr>
+<td>홍길동</td>
+<td>80</td>
+<td>80</td>
+<td>80</td>
+<td>240</td>
+</tr>
+</table>
+
+
+
+
+# 시리즈(Series)
+
+## 딕셔너리로 시리즈 생성하기
+``` python 
+import pandas as pd
+
+dict_data = {'a':1, 'b':2, 'c':3}
+
+sr = pd.Series(dict_data)
+print(type(sr))
+print(sr)
+```
+
+```
+#  결과 
+<class 'pandas.core.series.Series'>
+a    1
+b    2
+c    3
+dtype: int64 #  value값의 타입 
+```
+
+
+``` python 
+print(sr.index)
+print(sr.values)
+```
+```
+#  결과
+Index(['a', 'b', 'c'], dtype='object')
+[1 2 3]
+```
+
+
+## 리스트로 시리즈 생성하기
+
+``` python 
+list_data = [3.141582,0,True,'2025-01-03','python']
+sr2 = pd.Series(list_data)
+print(sr2)
+```
+```
+#  결과
+0      3.141582
+1             0
+2          True
+3    2025-01-03
+4        python
+dtype: object
+```
+
+``` python
+print(sr2.index)
+print(sr2.values)
+print(sr2[4])
+```
+```
+#  결과 
+RangeIndex(start=0, stop=5, step=1)
+[3.141582 0 True '2025-01-03' 'python']
+python
+```
+
+
+## 시리즈 key 추가하기 
+
+
+``` python 
+tup_data = ('A',False,'비',0)
+sr3 = pd.Series(tup_data)
+print(sr3)
+```
+```
+#  결과 
+0        A
+1    False
+2        비
+3        0
+dtype: object
+```
+
+``` python 
+tup_data = ('A',False,'비',0)
+sr3 = pd.Series(tup_data, index=['english','boolean','korean','number'])
+print(sr3)
+```
+
+```
+#  결과 
+english        A
+boolean    False
+korean         비
+number         0
+dtype: object
+```
+
+## 시리즈 원소 접근하기
+
+오류 발생 
+
+``` python
+print(sr3[0]) #  출력은 되지만 오류 발생 
+```
+```
+## 결과
+A
+C:\Users\kj\AppData\Local\Temp\ipykernel_5996\2956881224.py:1: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  print(sr3[0])
+```
+
+Series[key]로 접근 
+
+``` python
+print(sr3['english'])
+```
+```
+#  결과 
+A
+```
+
+
+## 시리즈 키값 여러 개 사용하기
+
+오류 발생 
+
+``` python
+print(sr3['english','korean'])
+```
+```
+## 결과 
+---------------------------------------------------------------------------
+KeyError                                  Traceback (most recent call last)
+Cell In[53], line 1
+----> 1 print(sr3['english','korean'])
+
+File ~\anaconda3\Lib\site-packages\pandas\core\series.py:1153, in Series.__getitem__(self, key)
+   1150     key = np.asarray(key, dtype=bool)
+   1151     return self._get_rows_with_mask(key)
+-> 1153 return self._get_with(key)
+
+File ~\anaconda3\Lib\site-packages\pandas\core\series.py:1163, in Series._get_with(self, key)
+   1158     raise TypeError(
+   1159         "Indexing a Series with DataFrame is not "
+   1160         "supported, use the appropriate DataFrame column"
+   1161     )
+   1162 elif isinstance(key, tuple):
+-> 1163     return self._get_values_tuple(key)
+   1165 elif not is_list_like(key):
+   1166     # e.g. scalars that aren't recognized by lib.is_scalar, GH#32684
+   1167     return self.loc[key]
+
+File ~\anaconda3\Lib\site-packages\pandas\core\series.py:1207, in Series._get_values_tuple(self, key)
+   1204     return result
+   1206 if not isinstance(self.index, MultiIndex):
+-> 1207     raise KeyError("key of type tuple not found and not a MultiIndex")
+   1209 # If key is contained, would have returned by now
+   1210 indexer, new_index = self.index.get_loc_level(key)
+
+KeyError: 'key of type tuple not found and not a MultiIndex'
+```
+
+인수 값이 여러 개면 오류가 발행하여 리스트 하나 인수 값으로 넣는다.  
+리스트의 값으로는 key 값을 넣는다.
+
+``` python
+print(sr3[['english','korean']])
+```
+```
+#  결과
+english    A
+korean     비
+dtype: object
+```
+
+
+
+## 인덱싱을 사용한 원소 접근 
+
+``` python 
+print(sr3[0:2])
+```
+```
+#  결과 
+english        A
+boolean    False
+dtype: object
+```
+
+
+
+# 데이터 프레임(Data Frame)
+
+2차원 배열    
+여러 개의 Series 데이터로 구성된 구조  
+index와 column들로 구성 
+
+
+## 데이터 프레임 생성 
+
+
+딕셔너리 key는 시리즈의 이름으로 변환되어 데이터 프레임의 열 이름이 된다.
+
+딕셔너리 value에 해당하는 리스트가 시리즈 배열로 변환되여 열이 된다.
+
+``` python
+{'A':[1,2,3,4], 'B':[5,6,7,8]}
+
+# 컬럼 이름 : A 
+# 컬럼의 데이터 : [1,2,3,4] 
+
+```
+```
+#  결과
+A
+1
+2
+3
+```
+
+
+
+
+
+
+``` python
+
+dict_data = {
+    'name':['홍길동', '유재석', '정형돈', '박명수'],
+    'age':[52, 44, 41, 51],
+    'gender':['M','F','M','M']
+}
+
+df = pd.DataFrame(dict_data)
+print(type(df))
+print(df)
+
+```
+
+```
+<class 'pandas.core.frame.DataFrame'>
+
+  name  age gender
+0  홍길동   52      M
+1  유재석   44      F
+2  정형돈   41      M
+3  박명수   51      M
+```
+
+
+## 행 인덱스, 열 이름 설정
+
+데이터 프레임 데이터 생성 
+
+``` python
+df = pd.DataFrame([[15, '남', '한국중학교'], [16, '여', '한국여자중학교']])
+print(df)
+```
+```
+    0  1        2
+0  15  남    한국중학교
+1  16  여  한국여자중학교
+```
+
+
+## 인덱스 추가 
+
+``` python
+df = pd.DataFrame([[15, '남', '한국중학교'], [16, '여', '한국여자중학교']], index=['홍길동','정길동'])
+print(df)
+```
+```
+      0  1        2
+홍길동  15  남    한국중학교
+정길동  16  여  한국여자중학교
+```
+
+## 인덱스, 컬럼명 추가 
+
+``` python
+df = pd.DataFrame([[15, '남', '한국중학교'], [16, '여', '한국여자중학교']], index=['홍길동','정길동'], columns=['나이','성별','학교명'])
+print(df)
+```
+```
+ 나이 성별      학교명
+홍길동  15  남    한국중학교
+정길동  16  여  한국여자중학교
+```
+
+
+## 인덱스, 컬럼 출력 
+``` python
+print(df.index)
+print(df.columns)
+```
+```
+Index(['홍길동', '정길동'], dtype='object')
+Index(['나이', '성별', '학교명'], dtype='object')
+```
+
+
+## 인덱스 변경 
+``` python 
+df.index = ['노홍철','정준하']
+print(df)
+```
+```
+     나이 성별      학교명
+노홍철  15  남    한국중학교
+정준하  16  여  한국여자중학교
+```
+
+## 컬럼명 변경 
+``` python 
+df.columns = ['age', 'gender', 'schoo_name']
+print(df)
+```
+```
+ age gender schoo_name
+홍 길동   15      남      한국중학교
+정 길동   16      여    한국여자중학교
+```
+
+
+## 인덱스, 컬럼명 임시 변경 
+
+``` python
+df.rename(columns = {'gender':'성별'})
+df.rename(index = {'노홍철':'김홍철'})
+```
+
+## 인덱스, 컬럼명 일부만 변경 
+
+``` python 
+df.rename(columns = {'gender':'성별'}, inplace = True) #  이뮤터블 때문에 영구 적용 시켜야한다.
+df.rename(index = {'노홍철':'김홍철'}, inplace = True)
+print(df)
+```
+```
+age 성별 schoo_name
+김홍철   15  남      한국중학교
+정준하   16  여    한국여자중학교
+```
+
+※ rename함수에서 inplace 옵션을 True로 해야 영구적으로 적용이 된다.
+
+
+
+## 데이터프레임에서 딕셔너리, 리스트의 차이 
+
+```
+dict_data = {'column_name':[1,2,3]}
+column_name
+1
+2
+3
+```
+```
+list_data = [[15,'남','한국중학교]]
+15 남 한국중학교
+```
+
+※ 딕셔너리의 value은 열의 값들이 되고 (세로로 순차적), 리스트는 행의 값들이 된다.(가로로 순차적)
+
+
+
+
+
+
+
+## 행, 열의 삭제 
+
+행 삭제 : axis = 0    
+열 삭제 : axis = 1    
+
+여러개의 행 또는 열을 삭제하라면 리스트 형태로 입력     
+inplace 옵션 동일하게 사용한다.
+
+
+
+## drop
+
+DataFrame.drop(index|column [, axis=n, inplace = True])
+
+``` python 
+exam_data = {'수학':[90,80,70],'영어':[92,82,72],'국어':[93,83,73],'음악':[91,81,71]}
+
+df_origin = pd.DataFrame(exam_data, index = ['재석', '형돈', '하하'])
+
+df_copy = df_origin[:]
+df_copy
+```
+
+``` python 
+#df_copy.drop('하하', inplace = True)
+df_copy = df_copy.drop('형돈', axis = 0)
+df_copy
+df_copy.drop(['재석', '하하'], axis = 0, inplace = True)
+df_copy
+df_copy.drop(['국어', '음악'], axis = 1, inplace = True)
+df_copy
+```
+
+
+## 단일 행 선택 
+
+### DataFrame.loc[index]로 행 선택 
+
+``` python 
+df_copy = df_origin[:]
+slct = df_copy.loc['하하']
+print(type(slct))
+print(slct)
+```
+```
+<class 'pandas.core.series.Series'>
+수학    70
+영어    72
+국어    73
+음악    71
+Name: 하하, dtype: int64
+```
+※ 행을 선택한 데이터는 시리즈다.
+
+
+### DataFrame.loc[n]로 행 선택 
+
+``` python 
+slct = df_copy.iloc[1]
+print(slct)
+```
+
+```
+수학    80
+영어    82
+국어    83
+음악    81
+Name: 형돈, dtype: int64
+```
+
+## 여러 행 선택 
+
+``` python
+slct = df_copy.loc[['하하', '재석']]
+print(type(slct))
+print(slct)
+```
+```
+<class 'pandas.core.frame.DataFrame'>
+    수학  영어  국어  음악
+하하  70  72  73  71
+재석  90  92  93  91
+```
+
+
+``` python
+slct = df_copy.iloc[[2,0]]
+print(type(slct))
+print(slct)
+```
+```
+<class 'pandas.core.frame.DataFrame'>
+    수학  영어  국어  음악
+하하  70  72  73  71
+재석  90  92  93  91
+```
+
+
+## 열 선택 
+
+### DataFrame[column_name]
+
+``` python
+df_copy['수학']
+```
+```
+재석    90
+형돈    80
+하하    70
+Name: 수학, dtype: int64
+```
+
+### DataFrame.column_name
+
+``` python
+df_copy.수학
+```
+
+```
+재석    90
+형돈    80
+하하    70
+Name: 수학, dtype: int64
+```
+
+## 여러 열 선택 
+
+``` python
+slct = df_copy[['수학','영어']]
+print(slct)
+```
+```
+    수학  영어
+재석  90  92
+형돈  80  82
+하하  70  72
+```
+
+## 원소 선택 
+
+하나의 값을 추출   
+loc, iloc 사용
+
+### 인덱스, 컬럼
+``` python
+df_copy.loc['재석','음악']
+```
+
+### 인덱스2, 컬럼1
+``` python
+df_copy.loc[['재석','하하'], '수학']
+```
+
+### 인덱스2, 컬럼2
+``` python
+df_copy.loc[['재석','하하'], ['수학','국어']]
+df_copy.iloc[[0,2], [0,2]]
+```
+
+### 슬라이싱 
+``` python 
+df_copy.loc['재석':'하하', '수학':'국어']
+df_copy.iloc[0:3, 0:3]
+```
+
+
+
+## 열 추가 
+
+열이 없다면 새로 추가 되고 열이 이미 있다면 값을 덮어쓴다.
+
+``` python
+df_copy['컴퓨터'] = [80, 70, 60]
+```
+```
+#  결과 
+	수학	영어	국어	음악	컴퓨터
+재석	90	92	93	80	80
+형돈	80	82	83	70	70
+하하	70	72	73	60	60
+
+```
+
+## 행 추가 
+
+``` python
+df_copy.loc['준하'] = 70
+```
+
+
+## 원소 값 변경 
+
+``` python
+df_copy.loc['재석', '수학'] = 100
+```
+```
+#  결과 
+     수학  영어  국어  음악  컴퓨터
+재석  100  92  93  80   80
+형돈   80  82  83  70   70
+하하   70  72  73  60   60
+준하  100  99  98  94   91
+```
+
+``` python
+df_copy.iloc[0, 0] = 10
+```
+
+```
+     수학  영어  국어  음악  컴퓨터
+재석   10  92  93  80   80
+형돈   80  82  83  70   70
+하하   70  72  73  60   60
+준하  100  99  98  94   91
+```
+
+
+``` python 
+df_copy.loc['준하',:] = 0
+df_copy.loc['준하',['수학','영어','국어','음악','컴퓨터']] = 0
+```
+
+```
+#  결과
+
+    수학  영어  국어  음악  컴퓨터
+재석  10  92  93  80   80
+형돈  80  82  83  70   70
+하하  70  72  73  60   60
+준하   0   0   0   0    
+
+0
+```
+
+
+
+
+# 정리
+## Series 생성
+
+``` python
+import pandas as pd
+
+s = pd.Series()
+```
+
+
+
+
+
+
+
+## 전치행렬
+행과 열의 위치를 바꾼다 
+
+``` python
+import pandas as pd
+
+exam_data = {'수학':[90,80,70],'영어':[92,82,72],'국어':[93,83,73],'음악':[91,81,71]}
+df_origin = pd.DataFrame(exam_data, index = ['재석', '형돈', '하하'])
+df_copy = df_origin[:]
+df_copy = df_copy.transpose() # df_copy.T 도 가능 
+print(df_copy)
+```
+
+
+
+## 특정 열을 행 인덱스로 설정 
+
+``` python
+df_copy = df_copy.reset_index()
+print(df_copy)
+```
+
+```
+  index  재석  형돈  하하
+0    수학  90  80  70
+1    영어  92  82  72
+2    국어  93  83  73
+3    음악  91  81  71
+```
+
+
+``` python
+df_copy = df_copy.set_index(['index'])
+```
+
+```
+```
+
+
+## 멀티 인덱스 
+``` python 
+df_copy = df_copy.set_index(['index1', 'index2'])
+```
+
+## 인덱스 재배열 
+
+``` python
+import pandas as pd
+
+dict_data = {
+    'c0':[1,2,3],
+    'c1':[4,5,6],
+    'c2':[7,8,9],
+    'c3':[10,11,12],
+    'c4':[13,14,15]
+}
+
+ndf = pd.DataFrame(dict_data, index = ['r0', 'r1', 'r2'])
+print(ndf)
+```
+
+```
+    c0  c1  c2  c3  c4
+r0   1   4   7  10  13
+r1   2   5   8  11  14
+r2   3   6   9  12  15
+```
+
+``` python
+new_index = ['r0', 'r1', 'r2', 'r3', 'r4']
+ndf = ndf.reindex(new_index)
+print(ndf)
+```
+```
+     c0   c1   c2    c3    c4
+r0  1.0  4.0  7.0  10.0  13.0
+r1  2.0  5.0  8.0  11.0  14.0
+r2  3.0  6.0  9.0  12.0  15.0
+r3  NaN  NaN  NaN   NaN   NaN
+r4  NaN  NaN  NaN   NaN   NaN
+```
+
+
+## 인덱스 재배열, fill_value
+
+``` python 
+
+dict_data = {
+    'c0':[1,2,3],
+    'c1':[4,5,6],
+    'c2':[7,8,9],
+    'c3':[10,11,12],
+    'c4':[13,14,15]
+}
+
+ndf = pd.DataFrame(dict_data, index = ['r0', 'r1', 'r2'])
+
+
+new_index = ['r0', 'r1', 'r2', 'r3', 'r4']
+ndf = ndf.reindex(new_index, fill_value = 0)
+print(ndf)
+```
+
+```
+    c0  c1  c2  c3  c4
+r0   1   4   7  10  13
+r1   2   5   8  11  14
+r2   3   6   9  12  15
+r3   0   0   0   0   0
+r4   0   0   0   0   0
+```
+
+
+## 행 인덱스 기준으로 정렬 
+
+``` python
+ndf = ndf.sort_index(ascending=False)
+```
+
+## 컬럼 기준으로 정렬 
+
+``` python
+ndf = ndf.sort_values(by = 'c3', ascending = False) 
+#ndf = ndf.sort_values('c3', ascending = False) 
+#  ascending = False : 내림차순 DESC
+ndf
+```
+
+
+<br>
+<br>
+<br>
+<br>
+
+# Series, DataFrame의 산술연산
+
+
+
+``` python 
+stu1_score = {
+    '국어':100,
+    '영어':95,
+    '수학':98,
+}
+
+stu2_score = {
+    '수학':14,
+    '국어':50,
+    '영어':63,
+}
+stu1 = pd.Series(stu1_score)
+stu2 = pd.Series(stu2_score)
+
+add = stu1 + stu2
+sub = stu1 - stu2
+mul = stu1 * stu2
+div = stu1 / stu2
+
+result = pd.DataFrame([add, sub, mul, div], index = ['add', 'sub', 'mul', 'div'])
+print(result)
+
+
+
+```
+```
+         국어      수학           영어
+add   150.0   112.0   158.000000
+sub    50.0    84.0    32.000000
+mul  5000.0  1372.0  5985.000000
+div     2.0     7.0     1.507937
+```
+
+※ 시리즈의 연산을 데이터프레임으로 만들면 기존의 키가 열이 된다 
+
+
+
+## NaN 데이터가 있을 때 
+
+결측치가 있을때 NumPy.nan을 사용하고 연산은 메소드 사용한다 
+
+
+``` python 
+import numpy as np
+#st1 = pd.Series({'국어':nan, '영어':90, '수학':44})
+st1 = pd.Series({'국어':np.nan, '영어':90, '수학':44})
+st2 = pd.Series({'국어':33, '영어':90,})
+
+add = st1 + st2
+print(add)
+
+```
+```
+국어      NaN
+수학      NaN
+영어    180.0
+dtype: float64
+```
+
+
+``` python
+st_add = st1.add(st2, fill_value=0)
+st_sub = st1.sub(st2, fill_value=0)
+st_mul = st1.mul(st2, fill_value=0)
+st_div = st1.div(st2, fill_value=0)
+
+result = pd.DataFrame([st_add, st_sub, st_mul, st_div], index=['add', 'sub', 'mul', 'div'])
+print(result)
+```
+
+```
+       국어    수학      영어
+add  33.0  44.0   180.0
+sub -33.0  44.0     0.0
+mul   0.0   0.0  8100.0
+div   0.0   inf     1.0
+```
+
+
+
+## DataFrame 산술연산
+
+``` python 
+import seaborn as sns
+
+titanic = sns.load_dataset('titanic')
+
+titanic.head() #  앞 5줄 출력
+
+titanic.tail() #  뒤 5줄 출력 
+```
+
