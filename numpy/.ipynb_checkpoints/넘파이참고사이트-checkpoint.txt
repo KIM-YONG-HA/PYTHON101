@@ -1,0 +1,5 @@
+[기초탄탄 파이썬_데이터 시각화]
+https://wikidocs.net/193543
+
+[빠르게 따라하는 Python]
+https://wikidocs.net/227411
