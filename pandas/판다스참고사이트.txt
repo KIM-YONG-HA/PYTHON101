@@ -1,3 +1,7 @@
+[Python 완전정복 시리즈] 2편 : Pandas DataFrame 완전정복
+https://wikidocs.net/book/7188
+
+
 [ 문과생도 할 수 있는 ] 파이썬 업무 자동화 일잘러 되기 + 챗GPT
 https://wikidocs.net/252577
 
@@ -13,8 +17,6 @@ https://wikidocs.net/174651
 [비즈니스 데이터 분석 with Python]
 https://wikidocs.net/205257
 
-[Python 완전정복 시리즈] 2편 : Pandas DataFrame 완전정복
-https://wikidocs.net/book/7188
 
 [파이썬 연습 - 200제]
 https://wikidocs.net/book/15975
