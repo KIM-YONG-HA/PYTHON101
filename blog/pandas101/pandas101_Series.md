@@ -335,3 +335,115 @@ dtype: int64
 
 ※ 문자 인덱스의 경우 A, B, C, D(마지막 인덱스 D 포함)
 ※ 숫자 인덱스의 경우 0, 1, 2(마지막 인덱스 3 미포함)
+
+
+<br><br>
+
+## Series.values
+Series.values를 이용하여 원소 값들을 출력할 수 있다. 
+
+``` python 
+sr = pd.Series([10, 20, 30, 40])
+print(sr.values)
+print(type(sr.values))
+```
+```
+[10 20 30 40]
+<class 'numpy.ndarray'>
+```
+
+### 원소 값 수정
+``` python 
+sr[0] = 100
+print(sr.values)
+```
+```
+[100  20  30  40]
+```
+
+
+## Series.drop()
+drop메소드는 원본의 삭제가 아닌 수정된 사본을 리턴하기때문에 
+inplace=True 옵션 또는 변수에 다시 저장해야한다.
+
+
+``` python 
+sr.drop(0)
+print(sr)
+```
+```
+0    100
+1     20
+2     30
+3     40
+dtype: int64
+```
+
+``` python
+sr.drop(0, inplace=True)
+print(sr)
+```
+```
+1    20
+2    30
+3    40
+dtype: int64
+```
+
+### del
+
+del은 원본을 수정하며 데이터프레임의 row를 삭제할 수 없다.
+
+``` python
+del sr[1]
+print(sr)
+```
+```
+2    30
+3    40
+dtype: int64
+```
+
+### 지정된 인덱스로 삭제 후 원본 시리즈 재저장
+
+``` python 
+sr = pd.Series([10, 20, 30, 40], index=list('ABCD'))
+sr = sr.drop('A')
+print(sr)
+```
+```
+B    20
+C    30
+D    40
+dtype: int64
+```
+
+## Series의 연산 
+
+시리즈 간의 연산이 가능하며 시리즈내 원소의 연산도 가능하다.
+
+``` python 
+sr1 = pd.Series([10, 20, 30, 40])
+sr2 = pd.Series([100, 200, 300, 400])
+result = sr1 + sr2
+print(result)
+```
+```
+0    110
+1    220
+2    330
+3    440
+dtype: int64
+```
+
+``` python 
+sr1 = sr1 / 2
+print(sr1)
+```
+```
+0     5.0
+1    10.0
+2    15.0
+3    20.0
+dtype: float64
+```
