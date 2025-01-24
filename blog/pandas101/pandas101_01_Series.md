@@ -114,13 +114,13 @@ Index(['a', 'b', 'c'], dtype='object')
 ### 리스트로 생성
 
 ``` python 
-list_data = [3.141582,0,True,'2025-01-03','python']
+list_data = [3.141592,0,True,'2025-01-03','python']
 sr2 = pd.Series(list_data)
 print(sr2)
 ```
 ```
 #  결과
-0      3.141582
+0      3.141592
 1             0
 2          True
 3    2025-01-03
@@ -130,7 +130,6 @@ dtype: object
 ``` python
 print(sr2.index)
 print(sr2.values)
-
 ```
 ```
 #  결과 
@@ -235,7 +234,7 @@ Index(['a', 'b', 'c', 'd'], dtype='object')
 
 
 
-
+<br><br>
 
 ## 인덱싱과 슬라이싱
 
@@ -280,8 +279,9 @@ FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a
 ```
 ※ 인덱스 지정 후 sr[0]은 출력은 되지만 ser.iloc[pos]를 권장한다는 오류가 출력된다.
 
+<br><br>
 
-### 불리언 인덱싱(boolean indexing)
+## 불리언 인덱싱(boolean indexing)
 조건식을 만들어 True에 해당하는 값만 필터링한다
 
 ``` python 
@@ -307,9 +307,9 @@ dtype: object
 ※ 문자의 경우 아스키 코드값을 비교한다.
 
 
+<br><br>
 
-
-### 슬라이싱 
+## 슬라이싱 
 ``` python
 sr = pd.Series([10, 20, 30, 40])
 print(sr[0:3])
@@ -333,7 +333,7 @@ D    40
 dtype: int64
 ```
 
-※ 문자 인덱스의 경우 A, B, C, D(마지막 인덱스 D 포함)
+※ 문자 인덱스의 경우 A, B, C, D(마지막 인덱스 D 포함)  
 ※ 숫자 인덱스의 경우 0, 1, 2(마지막 인덱스 3 미포함)
 
 
@@ -417,6 +417,9 @@ C    30
 D    40
 dtype: int64
 ```
+
+<br><br>
+
 
 ## Series의 연산 
 
