@@ -70,3 +70,19 @@
 ## 7. Appication Layer 
 
 * HTTP, FTP, SMTP, POP3
+
+
+
+
+## 데이터 단위 
+```
+Application / Data(Message) /FTP, HTTP
+Presentation / Data(Message) /JPEG,MPEG
+Session / Data(Message) / NetBIOS
+
+Transport / Segment / TCP, UDP
+
+Network / Packet/ IP
+Data Link / Frame / MAC, PPP
+Physical / Bit /Ethernet, RS232c
+```
