@@ -1,9 +1,11 @@
 #include <stdio.h>
 int main(){
-    printf("hello");
+    
 
-    int a[5] = {1,2,3,4,5}
-    //int *p = &a
-
-
+    char* p = "KOREA";
+    printf("%s\n ", p);
+    printf("%s\n ", p+1);
+    printf("%c\n ", *p);
+    printf("%c\n ", *(p+3));
+    printf("%c\n ", *p+4);
 }
